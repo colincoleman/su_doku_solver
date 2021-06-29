@@ -1,5 +1,5 @@
-import group
-import cell
+from src.sudoku.cell import Cell
+from src.sudoku.group import Group
 
 
 class Puzzle:
@@ -9,12 +9,12 @@ class Puzzle:
         self.columns = {}
         self.boxes = {}
         for i in range(9):
-            self.rows[i] = group.Group()
-            self.columns[i] = group.Group()
-            self.boxes[i] = group.Group()
+            self.rows[i] = Group()
+            self.columns[i] = Group()
+            self.boxes[i] = Group()
 
         for i in range(81):
-            self.cells[i] = cell.Cell()
+            self.cells[i] = Cell()
             this_col_no = i % 9
             this_row_no = i // 9
             this_box_no = this_col_no // 3 + (this_row_no // 3) * 3
@@ -28,6 +28,6 @@ class Puzzle:
     def count_unknowns(self):
         unknowns = 0
         for this_cell in self.cells:
-            if self.cells[this_cell].definite_value == '_':
+            if self.cells[this_cell].definite_value == '_' or self.cells[this_cell].definite_value is None:
                 unknowns += 1
         return unknowns

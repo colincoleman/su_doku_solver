@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Usage: su_doku.py [INPUT] [--log]
+"""Usage: sudoku.py [INPUT] [--log]
 
 Solve a Su Doku puzzle
 Arguments:
@@ -10,13 +10,15 @@ Options:
   --log         Record working to log file
 """
 
-import puzzle
+
 from docopt import docopt
 import logging
 
+from src.sudoku.puzzle import Puzzle
+
 
 def run():
-    this_puzzle = puzzle.Puzzle()
+    this_puzzle = Puzzle()
     init_puzzle(this_puzzle)
     logging.info(create_visualisation(this_puzzle))
     previous_unknowns = 81
