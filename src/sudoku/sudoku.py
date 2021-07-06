@@ -10,7 +10,6 @@ Options:
   --log         Record working to log file
 """
 
-
 from docopt import docopt
 import logging
 
@@ -20,56 +19,32 @@ from src.sudoku.puzzle import Puzzle
 def run():
     this_puzzle = Puzzle()
     init_puzzle(this_puzzle)
-    logging.info(create_visualisation(this_puzzle))
     previous_unknowns = 81
     current_unknowns = this_puzzle.count_unknowns()
-    logging.info(current_unknowns)
+    logging.info("Unknowns: %s \n%s", this_puzzle.count_unknowns(), this_puzzle.create_visualisation())
     while 0 < current_unknowns != previous_unknowns:
         previous_unknowns = current_unknowns
 
         for cell in range(81):
-            this_puzzle.cells[cell].analyse_cell(this_puzzle)
-        logging.info(create_visualisation(this_puzzle))
-        current_unknowns = this_puzzle.count_unknowns()
-        logging.info(current_unknowns)
+            this_cell = this_puzzle.get_cell(cell)
+            if this_cell.definite_value is None or this_cell.definite_value == '_':
+                this_cell.analyse_cell(this_puzzle)
 
         for group in range(9):
-            this_puzzle.boxes[group].analyse_group()
-            this_puzzle.boxes[group].find_pairs()
-            this_puzzle.rows[group].analyse_group()
-            this_puzzle.rows[group].find_pairs()
-            this_puzzle.columns[group].analyse_group()
-            this_puzzle.columns[group].find_pairs()
+            this_box = this_puzzle.get_box(group)
+            this_box.analyse_group()
+            this_box.find_pairs()
+
+            this_column = this_puzzle.get_column(group)
+            this_column.analyse_group()
+            this_column.find_pairs()
+
+            this_row = this_puzzle.get_row(group)
+            this_row.analyse_group()
+            this_row.find_pairs()
+
         current_unknowns = this_puzzle.count_unknowns()
-    print(create_visualisation(this_puzzle))
-
-
-def format_row(this_row):
-    output = ['']
-    for i in this_row.cells:
-        if i % 3 == 0:
-            output.append('|')
-        next_value = this_row.cells[i].definite_value
-        if next_value == '_':
-            output.append(' ')
-        else:
-            output.append(next_value)
-    output.append('|')
-    return ''.join(output)
-
-
-def create_visualisation(this_puzzle):
-    builder = []
-    first_and_last = '.-----------.\n'
-    mid_grid = '|---+---+---|\n'
-    builder.append(first_and_last)
-    for row in range(9):
-        if row % 3 == 0 and row != 0:
-            builder.append(mid_grid)
-        builder.append(format_row(this_puzzle.rows[row]))
-        builder.append('\n')
-    builder.append(first_and_last)
-    return ''.join(builder)
+    print(this_puzzle.create_visualisation())
 
 
 def init_puzzle(this_puzzle):
@@ -97,6 +72,9 @@ if arguments['INPUT']:
 else:
     input_file = './example_puzzle.txt'
 if arguments['--log']:
-    logging.basicConfig(level=logging.INFO,filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+    logging.basicConfig(level=logging.INFO, filename='app.log', filemode='w',
+                        format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, filename='app.log', filemode='w',
+                    format='%(name)s - %(levelname)s - %(message)s')
 if __name__ == '__main__':
     run()

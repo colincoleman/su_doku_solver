@@ -1,12 +1,17 @@
+from src.sudoku.cell import Cell
+
+
 class Group:
     def __init__(self):
         self.cells = {}
 
+    def get_cell(self, index) -> Cell:
+        return self.cells[index]
+
     def analyse_group(self):
-        total_set = {'1', '2', '3', '4', '5', '6', '7', '8', '9'}
         all_possibles = []
         for cell in self.cells:
-            all_possibles.append(list(self.cells[cell].possible_values))
+            all_possibles.append(list(self.get_cell(cell).possible_values))
         for i in range(9):
             number = i + 1
             times_found = 0
@@ -17,9 +22,9 @@ class Group:
                     index_found = j
             if times_found == 1:
                 cell_index = index_found
-                self.cells[cell_index].definite_value = str(number)
-                self.cells[cell_index].possible_values = {str(number)}
-                self.cells[cell_index].impossible_values = total_set.difference(self.cells[cell_index].possible_values)
+                this_cell = self.get_cell(cell_index)
+                if this_cell.definite_value != str(number):
+                    this_cell.set_definite(str(number))
 
     def find_pairs(self):
         total_set = {'1', '2', '3', '4', '5', '6', '7', '8', '9'}
@@ -46,8 +51,10 @@ class Group:
 
     def eliminate_pair(self, pair):
         for cell in self.cells:
-            if self.cells[cell].possible_values != pair:
-                self.cells[cell].possible_values.difference(pair)
-                self.cells[cell].impossible_values.union(pair)
-                if len(self.cells[cell].possible_values) == 1:
-                    self.cells[cell].definite_value = self.cells[cell].possible_values.copy().pop()
+            this_cell = self.get_cell(cell)
+            if this_cell.possible_values != pair:
+                this_cell.possible_values.difference(pair)
+                this_cell.impossible_values.union(pair)
+                if len(this_cell.possible_values) == 1:
+                    if this_cell.definite_value != this_cell.possible_values.copy().pop():
+                        this_cell.set_definite(this_cell.possible_values.copy().pop())
