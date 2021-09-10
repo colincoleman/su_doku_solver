@@ -74,7 +74,6 @@ else:
 if arguments['--log']:
     logging.basicConfig(level=logging.INFO, filename='app.log', filemode='w',
                         format='%(name)s - %(levelname)s - %(message)s')
-logging.basicConfig(level=logging.INFO, filename='app.log', filemode='w',
-                    format='%(name)s - %(levelname)s - %(message)s')
+
 if __name__ == '__main__':
     run()

@@ -10,3 +10,22 @@ inspired me to find the old code that I wrote and share it.
 The orginal code was written in Java 1.2 and was difficult to explain, so I gave it a quick rewrite in python.
 
 Here is the result
+
+### Usage
+Run Tests
+```aidl
+pytest
+```
+Install Module
+```aidl
+python -m pip install -e .
+```
+Run Module
+
+```aidl
+python -m sudoku
+```
+Run with step by step log
+```aidl
+python -m sudoku --log 
+```
