@@ -27,21 +27,21 @@ def run():
 
         for cell in range(81):
             this_cell = this_puzzle.get_cell(cell)
-            if this_cell.definite_value is None or this_cell.definite_value == '_':
+            if this_cell.definite_value == '_':
                 this_cell.analyse_cell(this_puzzle)
 
         for group in range(9):
             this_box = this_puzzle.get_box(group)
             this_box.analyse_group()
-            this_box.find_pairs()
+            # this_box.find_pairs()
 
             this_column = this_puzzle.get_column(group)
             this_column.analyse_group()
-            this_column.find_pairs()
+            # this_column.find_pairs()
 
             this_row = this_puzzle.get_row(group)
             this_row.analyse_group()
-            this_row.find_pairs()
+            # this_row.find_pairs()
 
         current_unknowns = this_puzzle.count_unknowns()
     print(this_puzzle.create_visualisation())
@@ -51,6 +51,9 @@ def init_puzzle(this_puzzle):
     puzzle_data = parse_input_file(input_file)
     for count in range(81):
         this_puzzle.cells[count].definite_value = puzzle_data[count]
+        if puzzle_data[count] != "_":
+            this_puzzle.cells[count].set_definite(puzzle_data[count])
+
 
 
 def parse_input(puzzle_input_list):

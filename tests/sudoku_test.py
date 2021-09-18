@@ -6,7 +6,7 @@ input_file = './example_puzzle.txt'
 
 def test_init_puzzle():
     this_puzzle = Puzzle()
-    assert this_puzzle.cells[0].definite_value is None
+    assert this_puzzle.cells[0].definite_value == "_"
     init_puzzle(this_puzzle)
     assert this_puzzle.cells[0].definite_value == '4'
 
