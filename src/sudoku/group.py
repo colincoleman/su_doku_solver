@@ -1,6 +1,6 @@
+from typing import List
 from src.sudoku.cell import Cell
 
-total_set = {'1', '2', '3', '4', '5', '6', '7', '8', '9'}
 
 class Group:
     def __init__(self):
@@ -29,7 +29,7 @@ class Group:
             if 2 <= times_found <= 3 and self.cells[0].box_number != self.cells[8].box_number:
                 self.all_in_one_subgroup(number, found_at)
 
-    def all_in_one_subgroup(self, number, found_at_list):
+    def all_in_one_subgroup(self, number: int, found_at_list: List[int]):
         subgroup_1 = []
         subgroup_2 = []
         subgroup_3 = []
@@ -50,48 +50,17 @@ class Group:
                     self.eliminate_from_rest_of_box(subgroup_3, number)
 
     @staticmethod
-    def eliminate_from_rest_of_box(part_of_group, number):
+    def eliminate_from_rest_of_box(part_of_group: List[Cell], number: int):
+        total_set = {'1', '2', '3', '4', '5', '6', '7', '8', '9'}
         if part_of_group[0].box_number == part_of_group[1].box_number:
-            target_box = part_of_group[0].puzzle.boxes[part_of_group[0].box_number]
-        for cell in target_box.cells:
-            this_cell = target_box.cells[cell]
-            keep = False
-            for keep_cell in part_of_group:
-                if this_cell == keep_cell:
-                    keep = True
-            if not keep:
-                if this_cell.definite_value == "_":
-                    this_cell.impossible_values.add(str(number))
-                    this_cell.possible_values = total_set.difference(this_cell.impossible_values)
-
-    def find_pairs(self):
-        for first_cell in self.cells:
-            set_1 = self.cells[first_cell].possible_values
-            if len(set_1) == 2:
-                intersection_count = 0
-                pair_found = False
-                found_pair = None
-                for second_cell in self.cells:
-                    if second_cell != first_cell:
-                        set_2 = self.cells[second_cell].possible_values
-                        intersection = set_1.intersection(set_2)
-                        if len(intersection) > 0:
-                            intersection_count += 1
-                            if len(intersection) == 2:
-                                found_pair = second_cell
-                                pair_found = True
-                if intersection_count == 1 and pair_found:
-                    self.cells[found_pair].possible_values = self.cells[first_cell].possible_values
-                    self.cells[found_pair].impossible_values = self.cells[found_pair].impossible_values.difference(
-                        self.cells[found_pair].possible_values)
-                    self.eliminate_pair(self.cells[first_cell].possible_values)
-
-    def eliminate_pair(self, pair):
-        for cell in self.cells:
-            this_cell = self.get_cell(cell)
-            if this_cell.possible_values != pair:
-                this_cell.possible_values.difference(pair)
-                this_cell.impossible_values.union(pair)
-                if len(this_cell.possible_values) == 1:
-                    if this_cell.definite_value != this_cell.possible_values.copy().pop():
-                        this_cell.set_definite(this_cell.possible_values.copy().pop())
+            target_box: Group = part_of_group[0].puzzle.boxes[part_of_group[0].box_number]
+            for cell in target_box.cells:
+                this_cell: Cell = target_box.get_cell(cell)
+                eliminate = True
+                for keep_cell in part_of_group:
+                    if this_cell == keep_cell:
+                        eliminate = False
+                if eliminate:
+                    if this_cell.definite_value == "_":
+                        this_cell.impossible_values.add(str(number))
+                        this_cell.possible_values = total_set.difference(this_cell.impossible_values)

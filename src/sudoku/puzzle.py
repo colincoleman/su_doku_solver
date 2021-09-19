@@ -25,16 +25,16 @@ class Puzzle:
             self.get_column(this_col_no).cells[this_row_no] = self.get_cell(i)
             self.get_box(this_box_no).cells[this_col_no % 3 + (this_row_no % 3) * 3] = self.get_cell(i)
 
-    def get_row(self, index) -> Group:
+    def get_row(self, index: int) -> Group:
         return self.rows[index]
 
-    def get_column(self, index) -> Group:
+    def get_column(self, index: int) -> Group:
         return self.columns[index]
 
-    def get_box(self, index) -> Group:
+    def get_box(self, index: int) -> Group:
         return self.boxes[index]
 
-    def get_cell(self, index) -> Cell:
+    def get_cell(self, index: int) -> Cell:
         return self.cells[index]
 
     def count_unknowns(self):
@@ -57,9 +57,9 @@ class Puzzle:
         builder.append(first_and_last)
         return ''.join(builder)
 
-    def format_row(self, row):
+    def format_row(self, row_number: int):
         output = ['']
-        this_row = self.get_row(row)
+        this_row = self.get_row(row_number)
         for i in this_row.cells:
             if i % 3 == 0:
                 output.append('|')

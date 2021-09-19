@@ -33,15 +33,12 @@ def run():
         for group in range(9):
             this_box = this_puzzle.get_box(group)
             this_box.analyse_group()
-            # this_box.find_pairs()
 
             this_column = this_puzzle.get_column(group)
             this_column.analyse_group()
-            # this_column.find_pairs()
 
             this_row = this_puzzle.get_row(group)
             this_row.analyse_group()
-            # this_row.find_pairs()
 
         current_unknowns = this_puzzle.count_unknowns()
     print(this_puzzle.create_visualisation())
@@ -53,7 +50,6 @@ def init_puzzle(this_puzzle):
         this_puzzle.cells[count].definite_value = puzzle_data[count]
         if puzzle_data[count] != "_":
             this_puzzle.cells[count].set_definite(puzzle_data[count])
-
 
 
 def parse_input(puzzle_input_list):
